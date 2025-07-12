@@ -1,16 +1,18 @@
 import 'package:book_app/common/booking_header_text_widget.dart';
 import 'package:book_app/common/booking_text_button_widget.dart';
 import 'package:book_app/common/custom_elevated_button.dart';
+import 'package:book_app/models/service_card_model.dart';
 import 'package:flutter/material.dart';
 
 class PaymentScreen extends StatefulWidget {
   final VoidCallback onBack;
   final VoidCallback onPaymentComplete;
+  final ServiceCardModel serviceCardModel;
 
   const PaymentScreen({
     super.key,
     required this.onBack,
-    required this.onPaymentComplete,
+    required this.onPaymentComplete, required this.serviceCardModel,
   });
 
   @override

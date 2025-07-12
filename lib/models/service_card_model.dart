@@ -7,25 +7,42 @@ class ServiceCardModel {
   final String address;
   final String price;
   final String discountedPrice;
+  final String serviceQty;
+  final List<StaffModel> staffs;
 
   ServiceCardModel({
+    required this.staffs,
     required this.images,
     required this.title,
     required this.category,
     required this.address,
     required this.price,
     required this.discountedPrice,
+    required this.serviceQty,
   });
 }
 
 List<ServiceCardModel> dummyServiceCardList = [
   ServiceCardModel(
     images: AssetsPath.servicePng3,
-    title: 'High Quality Plumber Service ',
+    title: 'High Quality Plumber Service',
     category: 'Plumbing Service',
     address: 'City tower, Road : 1285, Usa',
     price: '\$2011',
     discountedPrice: '\$200',
+    serviceQty: '12',
+    staffs: [
+      StaffModel(
+        staffImage: AssetsPath.staffPng1,
+        staffEmail: 'jameswayne@store.com',
+        name: 'James Robert',
+      ),
+      StaffModel(
+        staffImage: AssetsPath.staffPng2,
+        staffEmail: 'plumberjane@store.com',
+        name: 'Jane Watson',
+      ),
+    ],
   ),
   ServiceCardModel(
     images: AssetsPath.servicePng4,
@@ -34,22 +51,19 @@ List<ServiceCardModel> dummyServiceCardList = [
     address: 'City tower, Road : 1285, Usa',
     price: '\$1051',
     discountedPrice: '\$999',
-  ),
-  ServiceCardModel(
-    images: AssetsPath.servicePng3,
-    title: 'High Quality Cleaning Services',
-    category: 'Cleaning Service',
-    address: 'City tower, Road : 1285, Usa',
-    price: '\$2021',
-    discountedPrice: '\$1999',
-  ),
-  ServiceCardModel(
-    images: AssetsPath.servicePng4,
-    title: 'High Quality Car Wash Service',
-    category: 'Car Wash',
-    address: 'City tower, Road : 1285, Usa',
-    price: '\$201',
-    discountedPrice: '\$199',
+    serviceQty: '54',
+    staffs: [
+      StaffModel(
+        staffImage: AssetsPath.staffPng2,
+        staffEmail: 'ahmedmusa@store.com',
+        name: 'Ahmed Musa',
+      ),
+      StaffModel(
+        staffImage: AssetsPath.staffPng3,
+        staffEmail: 'janesmith@store.com',
+        name: 'Jane Smith',
+      ),
+    ],
   ),
   ServiceCardModel(
     images: AssetsPath.servicePng4,
@@ -58,13 +72,30 @@ List<ServiceCardModel> dummyServiceCardList = [
     address: 'City tower, Road : 1285, Usa',
     price: '\$201',
     discountedPrice: '\$199',
-  ),
-  ServiceCardModel(
-    images: AssetsPath.servicePng4,
-    title: 'High Quality Car Wash Service',
-    category: 'Car Wash',
-    address: 'City tower, Road : 1285, Usa',
-    price: '\$201',
-    discountedPrice: '\$199',
+    serviceQty: '33',
+    staffs: [
+      StaffModel(
+        staffImage: AssetsPath.staffPng3,
+        staffEmail: 'jackdaniel@store.com',
+        name: 'Jack Daniel',
+      ),
+      StaffModel(
+        staffImage: AssetsPath.staffPng4,
+        staffEmail: 'robertsmith@store.com',
+        name: 'Robert Smith',
+      ),
+    ],
   ),
 ];
+
+class StaffModel {
+  final String staffImage;
+  final String staffEmail;
+  final String name;
+
+  StaffModel({
+    required this.staffImage,
+    required this.staffEmail,
+    required this.name,
+  });
+}

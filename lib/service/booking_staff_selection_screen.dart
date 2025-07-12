@@ -1,16 +1,22 @@
 import 'package:book_app/common/booking_header_text_widget.dart';
-import 'package:book_app/models/shop_card_model.dart';
+import 'package:book_app/models/service_card_model.dart';
 import 'package:flutter/material.dart';
 
 class BookingStaffSelectionScreen extends StatelessWidget {
   final VoidCallback onNext;
+  final ServiceCardModel serviceCardModel;
 
-  const BookingStaffSelectionScreen({super.key, required this.onNext});
+  const BookingStaffSelectionScreen({
+    super.key,
+    required this.onNext,
+    required this.serviceCardModel,
+  });
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final itemWidth = (screenWidth - 16 * 2 - 8) / 2;
+    final staffList = serviceCardModel.staffs;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,15 +34,14 @@ class BookingStaffSelectionScreen extends StatelessWidget {
                 Wrap(
                   spacing: 8,
                   runSpacing: 24,
-                  children: List.generate(dummyShopCardList.length, (index) {
-                    final item = dummyShopCardList[index];
+                  children: List.generate(staffList.length, (index) {
                     return SizedBox(
                       width: itemWidth,
-                      height: 250,
+                      height: 280,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(12),
                         onTap: onNext,
-                        child: StaffCardWidget(item: item),
+                        child: StaffCardWidget(item: staffList[index]),
                       ),
                     );
                   }),
@@ -53,7 +58,7 @@ class BookingStaffSelectionScreen extends StatelessWidget {
 class StaffCardWidget extends StatelessWidget {
   const StaffCardWidget({super.key, required this.item});
 
-  final ShopCardModel item;
+  final StaffModel item;
 
   @override
   Widget build(BuildContext context) {
@@ -74,14 +79,21 @@ class StaffCardWidget extends StatelessWidget {
           ),
         ),
         Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 4),
-            Image.asset(
-              item.images,
-              height: 140,
-              width: double.infinity,
-              fit: BoxFit.fill,
+            const SizedBox(height: 16),
+            Center(
+              child: CircleAvatar(
+                radius: 80,
+                backgroundImage: AssetImage(item.staffImage),
+              ),
             ),
+            // Image.asset(
+            //   item.staffImage,
+            //   height: 180,
+            //   width: double.infinity,
+            //   fit: BoxFit.fill,
+            // ),
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -98,7 +110,7 @@ class StaffCardWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                item.email ?? 'yourmailaas@mail.com',
+                item.staffEmail ?? 'yourmailaas@mail.com',
                 style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                 textAlign: TextAlign.center,
               ),

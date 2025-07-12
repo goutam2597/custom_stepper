@@ -2,21 +2,27 @@ import 'package:book_app/app/app_colors.dart';
 import 'package:book_app/common/booking_header_text_widget.dart';
 import 'package:book_app/common/booking_text_button_widget.dart';
 import 'package:book_app/custom_stepper.dart'; // Make sure this is imported
+import 'package:book_app/models/service_card_model.dart';
 import 'package:flutter/material.dart';
 
 class PaymentConfirmationScreen extends StatelessWidget {
   final VoidCallback onBackToHome;
+  final ServiceCardModel serviceCardModel;
 
-  const PaymentConfirmationScreen({super.key, required this.onBackToHome});
+  const PaymentConfirmationScreen({
+    super.key,
+    required this.onBackToHome,
+    required this.serviceCardModel,
+  });
 
   @override
   Widget build(BuildContext context) {
     final bookingDetails = <String, String>{
-      'Service Title:': 'Car Wash Service',
+      'Service Title:': serviceCardModel.title,
       'Booking Date:': 'July 05, 2025',
       'Appointment Date:': 'July 05, 2025',
       'Appointment Time:': '02:00 - 03:00',
-      'Vendor:': 'Lisareynolds',
+      'Vendor:': serviceCardModel.staffs.map((e) => e.name).join(', '),
       'Paid Amount:': '\$80.00',
       'Paid By:': 'Paypal',
       'Payment Status:': 'Completed',

@@ -2,13 +2,20 @@ import 'package:book_app/app/app_colors.dart';
 import 'package:book_app/common/booking_header_text_widget.dart';
 import 'package:book_app/common/booking_text_button_widget.dart';
 import 'package:book_app/common/form_header_text_widget.dart';
+import 'package:book_app/models/service_card_model.dart';
 import 'package:flutter/material.dart';
 
 class BillingScreen extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onNext;
+  final ServiceCardModel serviceCardModel;
 
-  const BillingScreen({super.key, required this.onBack, required this.onNext});
+  const BillingScreen({
+    super.key,
+    required this.onBack,
+    required this.onNext,
+    required this.serviceCardModel,
+  });
 
   @override
   Widget build(BuildContext context) {

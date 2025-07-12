@@ -2,16 +2,18 @@ import 'package:book_app/app/app_colors.dart';
 import 'package:book_app/common/booking_header_text_widget.dart';
 import 'package:book_app/common/booking_text_button_widget.dart';
 import 'package:book_app/common/login_screen_widget.dart';
+import 'package:book_app/models/service_card_model.dart';
 import 'package:flutter/material.dart';
 
 class BookingLoginScreen extends StatelessWidget {
   final VoidCallback onNext;
   final VoidCallback onBack;
+  final ServiceCardModel serviceCardModel;
 
   const BookingLoginScreen({
     super.key,
     required this.onNext,
-    required this.onBack,
+    required this.onBack, required this.serviceCardModel,
   });
 
   @override

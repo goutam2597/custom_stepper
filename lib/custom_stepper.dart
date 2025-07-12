@@ -6,9 +6,12 @@ import 'package:book_app/service/date_n_time_screen.dart';
 import 'package:book_app/service/payment_screen.dart';
 import 'package:book_app/service/payment_confirmation_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:book_app/models/service_card_model.dart';
 
 class StepperScreen extends StatefulWidget {
-  const StepperScreen({super.key});
+  final ServiceCardModel selectedService;
+
+  const StepperScreen({super.key, required this.selectedService});
 
   @override
   State<StepperScreen> createState() => _StepperScreenState();
@@ -55,32 +58,44 @@ class _StepperScreenState extends State<StepperScreen> {
   }
 
   Widget _getCurrentScreen() {
+    // Pass the data down to each screen that needs it
     if (activeStep == 1) {
-      return BookingStaffSelectionScreen(onNext: _goToNextStep);
+      return BookingStaffSelectionScreen(
+        onNext: _goToNextStep,
+        serviceCardModel: widget.selectedService, // Pass your data
+      );
     } else if (activeStep == 2) {
-      return DateNTimeScreen(onNext: _goToNextStep, onBack: _goToPreviousStep);
+      return DateNTimeScreen(
+        onNext: _goToNextStep,
+        onBack: _goToPreviousStep,
+        serviceCardModel: widget.selectedService, // Pass your data
+      );
     } else if (activeStep == 3) {
       switch (currentSubScreen) {
         case 0:
           return BookingLoginScreen(
             onNext: _goToNextStep,
             onBack: _goToPreviousStep,
+            serviceCardModel: widget.selectedService, // Pass your data
           );
         case 1:
           return BillingScreen(
             onNext: _goToNextStep,
             onBack: _goToPreviousStep,
+            serviceCardModel: widget.selectedService, // Pass your data
           );
         case 2:
           return PaymentScreen(
             onBack: _goToPreviousStep,
             onPaymentComplete: () => setState(() => activeStep = 4),
+            serviceCardModel: widget.selectedService,
           );
       }
     } else if (activeStep == 4) {
       return PaymentConfirmationScreen(
         onBackToHome: () =>
             Navigator.popUntil(context, (route) => route.isFirst),
+        serviceCardModel: widget.selectedService, // Pass your data
       );
     }
     return const SizedBox.shrink();
@@ -88,11 +103,10 @@ class _StepperScreenState extends State<StepperScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine current step index for visual stepper
     final int stepDisplayIndex = activeStep == 4
-        ? 5 // Payment Confirmation should show all steps completed
+        ? 5
         : (activeStep == 3 && currentSubScreen == 2)
-        ? 4 // Payment screen shows info step completed
+        ? 4
         : activeStep;
 
     return Scaffold(
@@ -133,8 +147,8 @@ class CustomStepper extends StatelessWidget {
         children: [
           Positioned(
             top: _circleDiameter / 2 - _lineWidth / 2,
-            left: _circleDiameter / 1,
-            right: _circleDiameter / 1,
+            left: _circleDiameter / 0.5,
+            right: _circleDiameter / 0.5,
             child: Container(height: _lineWidth, color: Colors.grey.shade300),
           ),
           Row(
@@ -162,24 +176,29 @@ class CustomStepper extends StatelessWidget {
     required bool isActive,
     required String number,
   }) {
-    final Color circleColor =
-    isCompleted ? const Color(0xFF5CB85C) : Colors.white;
-    final Color borderColor =
-    isCompleted ? const Color(0xFF5CB85C) : Colors.grey.shade400;
-    final Color labelColor =
-    isActive ? const Color(0xFF3F51B5) : Colors.black54;
-    final FontWeight labelWeight = isActive ? FontWeight.bold : FontWeight.normal;
+    final Color circleColor = isCompleted
+        ? const Color(0xFF5CB85C)
+        : Colors.white;
+    final Color borderColor = isCompleted
+        ? const Color(0xFF5CB85C)
+        : Colors.grey.shade400;
+    final Color labelColor = isActive
+        ? const Color(0xFF3F51B5)
+        : Colors.black54;
+    final FontWeight labelWeight = isActive
+        ? FontWeight.bold
+        : FontWeight.normal;
 
     final Widget child = isCompleted
         ? const Icon(Icons.check, color: Colors.white, size: 20)
         : Text(
-      number,
-      style: TextStyle(
-        color: Colors.grey.shade800,
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-    );
+            number,
+            style: TextStyle(
+              color: Colors.grey.shade800,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          );
 
     return Column(
       mainAxisSize: MainAxisSize.min,

@@ -147,7 +147,9 @@ class ServiceCardWidget extends StatelessWidget {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const StepperScreen(),
+                                                      StepperScreen(
+                                                        selectedService: item,
+                                                      ),
                                                 ),
                                               );
                                             },
