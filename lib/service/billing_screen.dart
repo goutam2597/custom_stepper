@@ -9,16 +9,26 @@ class BillingScreen extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onNext;
   final ServiceCardModel serviceCardModel;
+  final StaffModel? selectedStaff;
+  final DateTime? selectedDate;
+  final String? selectedSlot;
 
   const BillingScreen({
     super.key,
     required this.onBack,
     required this.onNext,
     required this.serviceCardModel,
+    required this.selectedStaff,
+    required this.selectedDate,
+    required this.selectedSlot,
   });
 
   @override
   Widget build(BuildContext context) {
+    String? formattedDate = selectedDate != null
+        ? "${selectedDate!.year}-${selectedDate!.month.toString().padLeft(2, '0')}-${selectedDate!.day.toString().padLeft(2, '0')}"
+        : null;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -34,7 +44,7 @@ class BillingScreen extends StatelessWidget {
                         child: BookingHeaderTextWidget(text: 'Billing Details'),
                       ),
                       const SizedBox(height: 32),
-
+                      // ---- Form fields ----
                       const FormHeaderTextWidget(text: 'Full Name*'),
                       const SizedBox(height: 4),
                       const TextField(),
@@ -111,4 +121,21 @@ class BillingScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _summaryLine(String title, String value) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 2),
+    child: Row(
+      children: [
+        Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black54),
+            )),
+        Text(
+          value,
+          style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.black87),
+        ),
+      ],
+    ),
+  );
 }

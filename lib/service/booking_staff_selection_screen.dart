@@ -2,13 +2,19 @@ import 'package:book_app/common/booking_header_text_widget.dart';
 import 'package:book_app/models/service_card_model.dart';
 import 'package:flutter/material.dart';
 
+// Call this like:
+// BookingStaffSelectionScreen(
+//   onStaffSelected: (staff) { ... },
+//   serviceCardModel: selectedService,
+// );
+
 class BookingStaffSelectionScreen extends StatelessWidget {
-  final VoidCallback onNext;
+  final ValueChanged<StaffModel> onStaffSelected; // Passes selected staff
   final ServiceCardModel serviceCardModel;
 
   const BookingStaffSelectionScreen({
     super.key,
-    required this.onNext,
+    required this.onStaffSelected,
     required this.serviceCardModel,
   });
 
@@ -35,13 +41,14 @@ class BookingStaffSelectionScreen extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 24,
                   children: List.generate(staffList.length, (index) {
+                    final staff = staffList[index];
                     return SizedBox(
                       width: itemWidth,
                       height: 280,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(12),
-                        onTap: onNext,
-                        child: StaffCardWidget(item: staffList[index]),
+                        onTap: () => onStaffSelected(staff),
+                        child: StaffCardWidget(item: staff),
                       ),
                     );
                   }),
@@ -84,17 +91,11 @@ class StaffCardWidget extends StatelessWidget {
             const SizedBox(height: 16),
             Center(
               child: CircleAvatar(
-                radius: 80,
+                radius: 60,
                 backgroundImage: AssetImage(item.staffImage),
               ),
             ),
-            // Image.asset(
-            //   item.staffImage,
-            //   height: 180,
-            //   width: double.infinity,
-            //   fit: BoxFit.fill,
-            // ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
@@ -110,12 +111,12 @@ class StaffCardWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                item.staffEmail ?? 'yourmailaas@mail.com',
+                item.staffEmail,
                 style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 20),
           ],
         ),
         Positioned(

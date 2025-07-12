@@ -21,14 +21,34 @@ class _StepperScreenState extends State<StepperScreen> {
   int activeStep = 1;
   int currentSubScreen = 0; // 0: login, 1: billing, 2: payment
 
+  StaffModel? selectedStaff;
+  DateTime? selectedDate;
+  String? selectedSlot;
+  String? selectedPayment;
+
+  // Staff selection callback
+  void _onStaffSelected(StaffModel staff) {
+    setState(() {
+      selectedStaff = staff;
+      activeStep = 2; // Move to next step
+    });
+  }
+
+  // Date/slot selection callback
+  void _onDateSlotSelected(DateTime date, String slot) {
+    setState(() {
+      selectedDate = date;
+      selectedSlot = slot;
+      activeStep = 3;
+      currentSubScreen = 0;
+    });
+  }
+
   void _goToNextStep() {
     if (activeStep == 1) {
-      setState(() => activeStep = 2);
+      // No-op: staff selection handles step change
     } else if (activeStep == 2) {
-      setState(() {
-        activeStep = 3;
-        currentSubScreen = 0;
-      });
+      // No-op: date/slot screen handles step change
     } else if (activeStep == 3) {
       if (currentSubScreen < 2) {
         setState(() => currentSubScreen++);
@@ -58,17 +78,16 @@ class _StepperScreenState extends State<StepperScreen> {
   }
 
   Widget _getCurrentScreen() {
-    // Pass the data down to each screen that needs it
     if (activeStep == 1) {
       return BookingStaffSelectionScreen(
-        onNext: _goToNextStep,
-        serviceCardModel: widget.selectedService, // Pass your data
+        serviceCardModel: widget.selectedService,
+        onStaffSelected: _onStaffSelected,
       );
     } else if (activeStep == 2) {
       return DateNTimeScreen(
-        onNext: _goToNextStep,
+        onNext: _onDateSlotSelected,
         onBack: _goToPreviousStep,
-        serviceCardModel: widget.selectedService, // Pass your data
+        serviceCardModel: widget.selectedService,
       );
     } else if (activeStep == 3) {
       switch (currentSubScreen) {
@@ -76,26 +95,44 @@ class _StepperScreenState extends State<StepperScreen> {
           return BookingLoginScreen(
             onNext: _goToNextStep,
             onBack: _goToPreviousStep,
-            serviceCardModel: widget.selectedService, // Pass your data
+            serviceCardModel: widget.selectedService,
+            selectedStaff: selectedStaff,
+            selectedDate: selectedDate,
+            selectedSlot: selectedSlot,
           );
         case 1:
           return BillingScreen(
             onNext: _goToNextStep,
             onBack: _goToPreviousStep,
-            serviceCardModel: widget.selectedService, // Pass your data
+            serviceCardModel: widget.selectedService,
+            selectedStaff: selectedStaff,
+            selectedDate: selectedDate,
+            selectedSlot: selectedSlot,
           );
         case 2:
           return PaymentScreen(
             onBack: _goToPreviousStep,
-            onPaymentComplete: () => setState(() => activeStep = 4),
+            onPaymentComplete: (paymentMethod) {
+              setState(() {
+                selectedPayment = paymentMethod;
+                activeStep = 4;
+              });
+            },
             serviceCardModel: widget.selectedService,
+            selectedStaff: selectedStaff,
+            selectedDate: selectedDate,
+            selectedSlot: selectedSlot,
           );
       }
     } else if (activeStep == 4) {
       return PaymentConfirmationScreen(
         onBackToHome: () =>
             Navigator.popUntil(context, (route) => route.isFirst),
-        serviceCardModel: widget.selectedService, // Pass your data
+        serviceCardModel: widget.selectedService,
+        selectedStaff: selectedStaff,
+        selectedDate: selectedDate,
+        selectedSlot: selectedSlot,
+        selectedPayment: selectedPayment,
       );
     }
     return const SizedBox.shrink();
@@ -112,7 +149,7 @@ class _StepperScreenState extends State<StepperScreen> {
     return Scaffold(
       body: Column(
         children: [
-          CustomAppBar(title: 'Service Booking'),
+          CustomAppBar(title: 'Service Booking', onTap: _goToPreviousStep),
           const SizedBox(height: 16),
           CustomStepper(activeStep: stepDisplayIndex),
           const SizedBox(height: 8),
@@ -122,6 +159,8 @@ class _StepperScreenState extends State<StepperScreen> {
     );
   }
 }
+
+// Your CustomStepper widget stays the same as in your original code!
 
 class CustomStepper extends StatelessWidget {
   final int activeStep;

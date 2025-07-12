@@ -6,13 +6,20 @@ import 'package:flutter/material.dart';
 
 class PaymentScreen extends StatefulWidget {
   final VoidCallback onBack;
-  final VoidCallback onPaymentComplete;
+  final void Function(String paymentMethod) onPaymentComplete;
   final ServiceCardModel serviceCardModel;
+  final StaffModel? selectedStaff;
+  final DateTime? selectedDate;
+  final String? selectedSlot;
 
   const PaymentScreen({
     super.key,
     required this.onBack,
-    required this.onPaymentComplete, required this.serviceCardModel,
+    required this.onPaymentComplete,
+    required this.serviceCardModel,
+    required this.selectedStaff,
+    required this.selectedDate,
+    required this.selectedSlot,
   });
 
   @override
@@ -39,6 +46,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String? formattedDate = widget.selectedDate != null
+        ? "${widget.selectedDate!.year}-${widget.selectedDate!.month.toString().padLeft(2, '0')}-${widget.selectedDate!.day.toString().padLeft(2, '0')}"
+        : null;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -47,12 +58,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
                     const BookingHeaderTextWidget(
                       text: 'Select Payment Method',
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24),
                     Container(
                       height: 56,
                       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -82,12 +94,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24),
                     SizedBox(
                       height: 56,
                       child: CustomElevatedButton(
                         text: 'Make Payment',
-                        onPressed: widget.onPaymentComplete,
+                        onPressed: () {
+                          if (selectedPaymentMethod != null) {
+                            widget.onPaymentComplete(selectedPaymentMethod!);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please select a payment method'),
+                              ),
+                            );
+                          }
+                        },
                         fontSize: 18,
                       ),
                     ),

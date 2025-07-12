@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class DateNTimeScreen extends StatefulWidget {
-  final VoidCallback onNext;
+  final void Function(DateTime date, String slot) onNext;
   final VoidCallback onBack;
   final ServiceCardModel serviceCardModel;
-
 
   const DateNTimeScreen({
     super.key,
     required this.onNext,
-    required this.onBack, required this.serviceCardModel,
+    required this.onBack,
+    required this.serviceCardModel,
   });
 
   @override
@@ -30,13 +30,6 @@ class _DateNTimeScreenState extends State<DateNTimeScreen> {
     "2025-07-13": ["01:00-03:00", "03:00-05:00", "05:00-07:00"],
     "2025-07-14": ["09:00-10:00", "11:00-12:00"],
     "2025-07-15": ["10:00-11:00", "12:00-13:00", "18:00-20:00"],
-    "2025-07-16": ["10:00-11:00", "12:00-13:00", "18:00-20:00"],
-    "2025-07-17": ["10:00-11:00", "12:00-13:00", "18:00-20:00"],
-    "2025-07-18": ["10:00-11:00", "12:00-13:00", "18:00-20:00"],
-    "2025-07-19": ["10:00-11:00", "12:00-13:00", "18:00-20:00"],
-    "2025-07-20": ["10:00-11:00", "12:00-13:00", "18:00-20:00"],
-    "2025-07-21": ["10:00-11:00", "12:00-13:00", "18:00-20:00"],
-    "2025-07-22": ["10:00-11:00", "12:00-13:00", "18:00-20:00"],
     // ...add more date-slot lists as needed
   };
 
@@ -62,7 +55,7 @@ class _DateNTimeScreenState extends State<DateNTimeScreen> {
             lastDay: DateTime.utc(2030, 3, 14),
             focusedDay: selectedDate ?? DateTime.now(),
             selectedDayPredicate: (day) =>
-                selectedDate != null &&
+            selectedDate != null &&
                 day.year == selectedDate!.year &&
                 day.month == selectedDate!.month &&
                 day.day == selectedDate!.day,
@@ -162,7 +155,7 @@ class _DateNTimeScreenState extends State<DateNTimeScreen> {
                 child: Row(
                   children: List.generate(
                     timeSlots.length,
-                    (index) => Padding(
+                        (index) => Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: ChoiceChip(
                         label: Text(
@@ -220,7 +213,16 @@ class _DateNTimeScreenState extends State<DateNTimeScreen> {
               ),
               BookingTextButtonWidget(
                 iconRight: true,
-                onTap: widget.onNext,
+                onTap: () {
+                  if (selectedDate == null || selectedSlotIndex == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Please select a date and time slot!")),
+                    );
+                    return;
+                  }
+                  final selectedSlot = getSlotsForSelectedDate()[selectedSlotIndex!];
+                  widget.onNext(selectedDate!, selectedSlot);
+                },
                 text: 'Next Step',
                 icon: Icons.arrow_forward,
                 iconColor: AppColors.themeColor,

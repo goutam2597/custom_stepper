@@ -1,30 +1,42 @@
 import 'package:book_app/app/app_colors.dart';
 import 'package:book_app/common/booking_header_text_widget.dart';
 import 'package:book_app/common/booking_text_button_widget.dart';
-import 'package:book_app/custom_stepper.dart'; // Make sure this is imported
+import 'package:book_app/custom_stepper.dart';
 import 'package:book_app/models/service_card_model.dart';
 import 'package:flutter/material.dart';
 
 class PaymentConfirmationScreen extends StatelessWidget {
   final VoidCallback onBackToHome;
   final ServiceCardModel serviceCardModel;
+  final StaffModel? selectedStaff;
+  final DateTime? selectedDate;
+  final String? selectedSlot;
+  final String? selectedPayment;
 
   const PaymentConfirmationScreen({
     super.key,
     required this.onBackToHome,
     required this.serviceCardModel,
+    required this.selectedStaff,
+    required this.selectedDate,
+    required this.selectedSlot,
+    this.selectedPayment,
   });
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate = selectedDate != null
+        ? "${selectedDate!.year}-${selectedDate!.month.toString().padLeft(2, '0')}-${selectedDate!.day.toString().padLeft(2, '0')}"
+        : "-";
+
     final bookingDetails = <String, String>{
       'Service Title:': serviceCardModel.title,
-      'Booking Date:': 'July 05, 2025',
-      'Appointment Date:': 'July 05, 2025',
-      'Appointment Time:': '02:00 - 03:00',
-      'Vendor:': serviceCardModel.staffs.map((e) => e.name).join(', '),
-      'Paid Amount:': '\$80.00',
-      'Paid By:': 'Paypal',
+      'Booking Date:': formattedDate,
+      'Appointment Date:': formattedDate,
+      'Appointment Time:': selectedSlot ?? "-",
+      'Vendor:': selectedStaff?.name ?? "-",
+      'Paid Amount:': serviceCardModel.discountedPrice,
+      'Paid By:': selectedPayment ?? '',
       'Payment Status:': 'Completed',
     };
 
@@ -68,7 +80,7 @@ class PaymentConfirmationScreen extends StatelessWidget {
           children: [
             _headerText('Your'),
             _headerText(
-              '( Cleaning )',
+              '( ${serviceCardModel.category} )',
               bold: true,
               color: AppColors.themeColor,
             ),
@@ -85,7 +97,7 @@ class PaymentConfirmationScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        Text(
+        const Text(
           'Thank You',
           style: TextStyle(
             fontSize: 18,

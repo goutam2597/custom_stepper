@@ -9,15 +9,23 @@ class BookingLoginScreen extends StatelessWidget {
   final VoidCallback onNext;
   final VoidCallback onBack;
   final ServiceCardModel serviceCardModel;
+  final StaffModel? selectedStaff;
+  final DateTime? selectedDate;
+  final String? selectedSlot;
 
   const BookingLoginScreen({
     super.key,
     required this.onNext,
-    required this.onBack, required this.serviceCardModel,
+    required this.onBack,
+    required this.serviceCardModel,
+    required this.selectedStaff,
+    required this.selectedDate,
+    required this.selectedSlot,
   });
 
   @override
   Widget build(BuildContext context) {
+    // You can use the data here (e.g., show summary or pass it further)
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -36,9 +44,14 @@ class BookingLoginScreen extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           maximumSize: const Size(304, 44),
                           backgroundColor: Colors.white,
-                          textStyle: const TextStyle(color: AppColors.themeColor),
+                          textStyle: const TextStyle(
+                            color: AppColors.themeColor,
+                          ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          // If you want to proceed as guest, call onNext()
+                          onNext();
+                        },
                         child: const Text(
                           'Proceed As Guest Checkout',
                           style: TextStyle(
@@ -49,9 +62,7 @@ class BookingLoginScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      LoginScreenWidget(
-                        onTap: onNext,
-                      ),
+                      LoginScreenWidget(onTap: onNext),
                       const SizedBox(height: 8),
                       SizedBox(
                         width: 164,
